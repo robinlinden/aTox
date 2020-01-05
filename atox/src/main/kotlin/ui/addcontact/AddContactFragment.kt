@@ -1,5 +1,6 @@
 package ltd.evilcorp.atox.ui.addcontact
 
+import com.google.zxing.integration.android.IntentIntegrator
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +16,7 @@ import ltd.evilcorp.atox.R
 import ltd.evilcorp.atox.vmFactory
 import ltd.evilcorp.domain.tox.ToxID
 import ltd.evilcorp.domain.tox.ToxIdValidator
+import android.util.Log
 
 class AddContactFragment : Fragment() {
     private val viewModel: AddContactViewModel by viewModels { vmFactory }
@@ -44,6 +46,11 @@ class AddContactFragment : Fragment() {
                     ToxIdValidator.Result.NO_ERROR -> null
                 }
 
+                val count = s?.toString()?.length
+                val str = String.format("%d/%d", count, 76)
+
+                n_characters.text = str
+
                 toxIdValid = toxId.error == null
                 add.isEnabled = isAddAllowed()
             }
@@ -64,6 +71,21 @@ class AddContactFragment : Fragment() {
         add.setOnClickListener {
             viewModel.addContact(ToxID(toxId.text.toString()), message.text.toString())
             findNavController().popBackStack()
+        }
+
+        var qrScanIntegrator: IntentIntegrator?
+
+        read_qr.setOnClickListener {
+            // Open QR code scanner
+            qrScanIntegrator = IntentIntegrator(activity)
+            qrScanIntegrator?.setOrientationLocked(false)
+            qrScanIntegrator?.setBeepEnabled(false)
+
+            val codes: Collection<String> = listOf(IntentIntegrator.QR_CODE)
+
+            qrScanIntegrator?.initiateScan(codes)
+
+
         }
 
         add.isEnabled = false

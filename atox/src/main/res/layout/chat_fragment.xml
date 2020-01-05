@@ -67,17 +67,18 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:targetApi="26"/>
 
-    <ImageButton android:id="@+id/send"
+    <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/send"
-            android:tint="@drawable/enabled_selector"
+            android:tint="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="@+id/outgoingMessage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/outgoingMessage"
             app:layout_constraintTop_toTopOf="@+id/outgoingMessage"
-            app:srcCompat="@drawable/send"/>
+            android:src="@drawable/send"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

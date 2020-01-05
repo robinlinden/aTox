@@ -65,6 +65,9 @@ dependencies {
 
     implementation("androidx.multidex:multidex:2.0.1")
 
+    implementation("com.journeyapps:zxing-android-embedded:3.6.0")
+    implementation("com.android.support:appcompat-v7:27.1.1")
+
     debugImplementation(Libraries.leakcanaryAndroid)
 
     testImplementation(Libraries.junit)
