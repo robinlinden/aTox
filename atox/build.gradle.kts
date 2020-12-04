@@ -60,6 +60,7 @@ dependencies {
     implementation(AndroidX.Core.ktx)
     implementation(AndroidX.appcompat)
     implementation(AndroidX.constraintlayout)
+    implementation(AndroidX.recyclerView)
 
     implementation(Google.Android.material)
 

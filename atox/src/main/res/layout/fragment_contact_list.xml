@@ -29,12 +29,14 @@
                     android:layout_margin="10dp"
                     android:text="@string/no_contacts_call_to_action"
                     app:layout_constraintTop_toTopOf="parent"/>
-            <ListView android:id="@+id/contactList"
+            <androidx.recyclerview.widget.RecyclerView android:id="@+id/contactList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:listitem="@layout/contact_list_view_item"/>
+                    tools:listitem="@layout/contact_list_view_item"
+                    tools:targetApi="23" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

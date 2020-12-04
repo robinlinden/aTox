@@ -4,9 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.ContextMenu
 import android.view.LayoutInflater
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -27,9 +25,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.navigation.NavigationView
 import ltd.evilcorp.atox.R
-import ltd.evilcorp.atox.databinding.ContactListViewItemBinding
 import ltd.evilcorp.atox.databinding.FragmentContactListBinding
-import ltd.evilcorp.atox.databinding.FriendRequestItemBinding
 import ltd.evilcorp.atox.databinding.NavHeaderContactListBinding
 import ltd.evilcorp.atox.ui.BaseFragment
 import ltd.evilcorp.atox.ui.chat.CONTACT_PUBLIC_KEY
@@ -109,7 +105,13 @@ class ContactListFragment :
 
         navView.setNavigationItemSelectedListener(this@ContactListFragment)
 
-        val contactAdapter = ContactAdapter(layoutInflater, resources)
+        val contactAdapter = ContactAdapter(
+            layoutInflater,
+            requireActivity().menuInflater,
+            resources,
+            onContactClick = ::openChat,
+            onFriendRequestClick = ::openFriendRequest
+        )
         contactList.adapter = contactAdapter
         registerForContextMenu(contactList)
 
@@ -117,7 +119,7 @@ class ContactListFragment :
             contactAdapter.friendRequests = friendRequests
             contactAdapter.notifyDataSetChanged()
 
-            noContactsCallToAction.visibility = if (contactAdapter.isEmpty) {
+            noContactsCallToAction.visibility = if (contactAdapter.itemCount == 0) {
                 View.VISIBLE
             } else {
                 View.GONE
@@ -134,21 +136,10 @@ class ContactListFragment :
             }
             contactAdapter.notifyDataSetChanged()
 
-            noContactsCallToAction.visibility = if (contactAdapter.isEmpty) {
+            noContactsCallToAction.visibility = if (contactAdapter.itemCount == 0) {
                 View.VISIBLE
             } else {
                 View.GONE
-            }
-        }
-
-        contactList.setOnItemClickListener { _, _, position, _ ->
-            when (contactList.adapter.getItemViewType(position)) {
-                ContactListItemType.FriendRequest.ordinal -> {
-                    openFriendRequest(contactList.getItemAtPosition(position) as FriendRequest)
-                }
-                ContactListItemType.Contact.ordinal -> {
-                    openChat(contactList.getItemAtPosition(position) as Contact)
-                }
             }
         }
 
@@ -180,36 +171,13 @@ class ContactListFragment :
         super.onDestroyView()
     }
 
-    override fun onCreateContextMenu(
-        menu: ContextMenu,
-        v: View,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-
-        val inflater: MenuInflater = requireActivity().menuInflater
-        val info = menuInfo as AdapterView.AdapterContextMenuInfo
-
-        when (binding.contactList.adapter.getItemViewType(info.position)) {
-            ContactListItemType.FriendRequest.ordinal -> {
-                val f = FriendRequestItemBinding.bind(info.targetView)
-                menu.setHeaderTitle(f.publicKey.text)
-                inflater.inflate(R.menu.friend_request_context_menu, menu)
-            }
-            ContactListItemType.Contact.ordinal -> {
-                val c = ContactListViewItemBinding.bind(info.targetView)
-                menu.setHeaderTitle(c.name.text)
-                inflater.inflate(R.menu.contact_list_context_menu, menu)
-            }
-        }
-    }
-
     override fun onContextItemSelected(item: MenuItem): Boolean {
         val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
 
         return when (info.targetView.id) {
             R.id.friendRequestItem -> {
-                val friendRequest = binding.contactList.adapter.getItem(info.position) as FriendRequest
+                val adapter = binding.contactList.adapter as ContactAdapter
+                val friendRequest = adapter.getItem(info.position) as FriendRequest
                 when (item.itemId) {
                     R.id.accept -> {
                         viewModel.acceptFriendRequest(friendRequest)
@@ -223,7 +191,8 @@ class ContactListFragment :
             R.id.contactListItem -> {
                 when (item.itemId) {
                     R.id.delete -> {
-                        val contact = binding.contactList.adapter.getItem(info.position) as Contact
+                        val adapter = binding.contactList.adapter as ContactAdapter
+                        val contact = adapter.getItem(info.position) as Contact
                         viewModel.deleteContact(PublicKey(contact.publicKey))
                     }
                 }

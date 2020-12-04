@@ -52,6 +52,7 @@ object AndroidX {
 
     const val appcompat = "androidx.appcompat:appcompat:1.2.0"
     const val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.1"
+    const val recyclerView = "androidx.recyclerview:recyclerview:1.1.0"
 
     object Navigation {
         private const val version = "2.3.2"
