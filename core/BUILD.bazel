@@ -1,4 +1,4 @@
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_test")
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_android_library", "kt_jvm_test")
 load("@rules_android//android:rules.bzl", "android_library")
 
 android_library(
@@ -23,3 +23,37 @@ kt_jvm_test(
         "@maven//:junit_junit",
     ],
 )
+
+kt_android_library(
+    name = "database_migration_test_lib",
+    srcs = ["src/androidTest/kotlin/db/DatabaseMigrationTest.kt"],
+    manifest = "src/main/AndroidManifest.xml",
+    assets = glob(["schemas/**"]),
+    assets_dir = "schemas",
+    custom_package = "ltd.evilcorp.core.db",
+    deps = [
+        ":core",
+        "@maven//:junit_junit",
+        "@maven//:androidx_room_room_testing",
+        "@maven//:androidx_test_ext_junit",
+        "@maven//:com_google_code_gson_gson",
+    ],
+)
+
+# Can't run with roboelectric:
+# https://github.com/robolectric/robolectric/issues/4209
+# https://stackoverflow.com/q/63566546
+# android_local_test(
+#     name = "database_migration_test",
+#     test_class = "ltd.evilcorp.core.db.DatabaseMigrationTest",
+#     custom_package = "ltd.evilcorp.core.db",
+#     manifest_values = {
+#         "minSdkVersion": "19",
+#         "targetSdkVersion": "29",
+#     },
+#     deps = [
+#         ":database_migration_test_lib",
+#         "@maven//:org_robolectric_robolectric",
+#         "@robolectric//bazel:android-all",
+#     ],
+# )

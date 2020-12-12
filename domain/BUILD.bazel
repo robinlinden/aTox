@@ -59,3 +59,65 @@ kt_jvm_test(
     test_class = "ltd.evilcorp.domain.tox.ToxUtilTest",
     deps = TEST_DEPS,
 )
+
+kt_android_library(
+    name = "tox_test_lib",
+    srcs = ["src/androidTest/kotlin/tox/ToxTest.kt"],
+    manifest = "src/main/BazelAndroidManifest.xml",
+    custom_package = "ltd.evilcorp.domain.tox",
+    deps = [
+        ":domain",
+        "@maven//:androidx_test_ext_junit",
+        "@maven//:io_mockk_mockk",
+        "@maven//:junit_junit",
+    ],
+)
+
+android_binary(
+    name = "tox_test_app",
+    multidex = "native",
+    manifest = "src/main/BazelAndroidManifest.xml",
+    manifest_values = {
+        "minSdkVersion": "26", # Higher than normal due to mockk.
+        "targetSdkVersion": "29",
+    },
+    custom_package = "ltd.evilcorp.domain.tox",
+    deps = [
+        ":domain",
+        "@maven//:androidx_test_ext_junit",
+        "@maven//:io_mockk_mockk",
+        "@maven//:junit_junit",
+    ],
+)
+
+android_binary(
+    name = "tox_test_app_instrumentation",
+    manifest = "src/androidTest/BazelAndroidManifest.xml",
+    manifest_values = {
+        "minSdkVersion": "26", # Higher than normal due to mockk.
+        "targetSdkVersion": "29",
+    },
+    custom_package = "ltd.evilcorp.domain.tox",
+    instruments = ":tox_test_app",
+)
+
+android_instrumentation_test(
+    name = "tox_test",
+    test_app = ":tox_test_app_instrumentation",
+    target_device = "@android_test_support//tools/android/emulated_devices/generic_phone:android_28_x86_qemu2",
+)
+
+# android_local_test(
+#     name = "tox_test",
+#     test_class = "ltd.evilcorp.domain.tox.ToxTest",
+#     custom_package = "ltd.evilcorp.domain.tox",
+#     manifest_values = {
+#         "minSdkVersion": "19",
+#         "targetSdkVersion": "29",
+#     },
+#     deps = [
+#         ":tox_test_lib",
+#         "@maven//:org_robolectric_robolectric",
+#         "@robolectric//bazel:android-all",
+#     ],
+# )

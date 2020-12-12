@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        package="ltd.evilcorp.domain.tox">
+    <uses-sdk
+            android:minSdkVersion="19"
+            android:targetSdkVersion="29"/>
+    <instrumentation
+            android:name="androidx.test.runner.AndroidJUnitRunner"
+            android:targetPackage="ltd.evilcorp.domain.tox"
+            android:handleProfiling="false"
+            android:functionalTest="false"/>
+
+    <!-- <uses-permission android:name="android.permission.REORDER_TASKS" /> -->
+
+    <application android:debuggable="true">
+        <uses-library android:name="android.test.runner" />
+        <!-- <service
+            android:name="androidx.room.MultiInstanceInvalidationService"
+            android:exported="false"
+            android:directBootAware="true" /> -->
+
+        <activity android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

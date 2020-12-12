@@ -6,5 +6,10 @@ build --per_file_copt='[-_]sse41\\.c$@-msse4.1'
 build --per_file_copt='[-_]sse4_1\\.c$@-msse4.1'
 build --per_file_copt='[-_]ssse3\\.c$@-mssse3'
 
+# Bazel's Android emulator test rules don't work without this.
+build --host_force_python=PY2
+
 test --test_output=errors
 test --test_verbose_timeout_warnings
+
+test:headless --test_arg=--enable_display=false

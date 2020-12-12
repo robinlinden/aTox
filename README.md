@@ -17,3 +17,7 @@ Clone!
 Build!
 
 `gradlew build`
+
+## Bazel
+
+* Running the qemu emulator tests required xvfb, libxcursor1, libtinfo5; run w/ --config headless.
