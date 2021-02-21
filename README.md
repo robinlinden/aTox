@@ -19,3 +19,26 @@ Clone!
 Build!
 
 `gradlew build`
+
+## Roadmap
+
+This is a rough overview of the major features I will add and the order I am planning on adding them in.
+There will be lots of small features and fixes in addition to these big ones.
+
+### 0.6.0
+
+* Support for using custom bootstrap nodes to fix aTox being listed as promoting [non-free network services][fdroid_atox_nonfree] on F-Droid.
+
+### 0.7.0
+
+* Audio calls.
+
+### 0.8.0
+
+* Video calls.
+
+### 0.9.0
+
+* Groupchats.
+
+[fdroid_atox_nonfree]: https://gitlab.com/fdroid/fdroiddata/-/merge_requests/8353#note_506867631
