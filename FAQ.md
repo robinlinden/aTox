@@ -2,24 +2,18 @@
 
 ## 1. I can't import a profile from another Tox client!
 
-In aTox, there are still not all functions. Support for encrypted profiles
-(which have a password) will be implemented in three stages:
+You may use the outdated version of the client. aTox 0.6.0 and earlier versions
+do not support the import of encrypted profiles (which have a password). To
+import a profile from another Tox client to these outdated aTox versions, you
+must first delete the password from the profile if your other client supports
+this function. Please keep in mind that it does not affect security, since the
+profile is stored in the "system" (userdata) section, in a separate folder
+where other applications do not have access, only aTox itself. Exceptions are
+only applications with root access. In any case, if you have such an
+opportunity, it will be better to upgrade to the latest version of aTox.
 
-1. Encrypted profiles cannot be imported into aTox.
-2. Encrypted profiles can be imported into aTox, but they will be stored
-   unencrypted. It will not affect security, as the profile is stored in the
-   "system" (userdata) partition, in a separate folder where other applications
-   or Android operating system do not have access, only aTox itself. Exceptions
-   are only applications with root access.
-3. Encrypted profiles can be imported into aTox, and they will always be stored
-   fully encrypted.
-
-aTox 0.6.0 and earlier versions are at the first stage. To import a profile
-from another Tox client to aTox, you must first remove the password from the
-profile if your client supports this feature. aTox 0.7.0 moved to the second
-stage. When, and if the transition to step three will be produced - this note
-will be updated.
-
+aTox 0.7.0 and later versions support any profiles from any other Tox clients,
+and also allow you to add/delete/change the profile password.
 
 ## 2. How much aTox consumes the battery charge and Internet traffic?
 
