@@ -12,6 +12,17 @@ The reasonable Tox client for Android.
 
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" alt="chat screen" height="600"> <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" alt="contact screen" height="600">
 
+## Features
+
+* One to one chat with friends
+* Audio calls
+* File transfers, with previewing of images
+* Translations in over 14 languages
+* Avatars
+* Faux offline messages
+* History of messages
+* And many more options!
+
 ## Building
 
 Clone!
