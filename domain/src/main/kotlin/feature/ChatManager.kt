@@ -7,6 +7,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import ltd.evilcorp.core.repository.ContactRepository
@@ -48,8 +49,19 @@ class ChatManager @Inject constructor(
             field = value
             if (value.isNotEmpty()) launch {
                 contactRepository.setHasUnreadMessages(value, false)
+            } else {
+                _realTimeText.value = ""
             }
         }
+
+    fun updateRealTimeText(pk: PublicKey, message: String) {
+        if (pk.string() == activeChat) {
+            _realTimeText.value = message
+        }
+    }
+
+    private val _realTimeText = MutableStateFlow("")
+    val realTimeText get() = _realTimeText
 
     fun messagesFor(publicKey: PublicKey) = messageRepository.get(publicKey.string())
 

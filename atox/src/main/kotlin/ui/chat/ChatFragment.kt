@@ -55,6 +55,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
     private lateinit var contactPubKey: String
     private var contactName = ""
     private var selectedFt: Int = Int.MIN_VALUE
+    private var rttEnabled = false
     private var fts: List<FileTransfer> = listOf()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?): Unit = binding.run {
@@ -91,6 +92,11 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
                         R.id.action_chatFragment_to_callFragment,
                         bundleOf(CONTACT_PUBLIC_KEY to contactPubKey)
                     )
+                    true
+                }
+                R.id.toggle_rtt -> {
+                    item.isChecked = !item.isChecked
+                    rttEnabled = item.isChecked
                     true
                 }
                 else -> super.onOptionsItemSelected(item)
@@ -208,7 +214,19 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
 
         outgoingMessage.doAfterTextChanged {
             viewModel.setTyping(outgoingMessage.text.isNotEmpty())
+            if (rttEnabled) {
+                viewModel.sendRealTimeText(outgoingMessage.text.toString())
+            }
             updateActions()
+        }
+
+        viewModel.realTimeText.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                realTimeText.text = it
+                realTimeText.visibility = View.VISIBLE
+            } else {
+                realTimeText.visibility = View.GONE
+            }
         }
 
         updateActions()

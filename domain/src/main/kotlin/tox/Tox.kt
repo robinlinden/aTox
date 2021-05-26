@@ -167,4 +167,7 @@ class Tox @Inject constructor(
     fun endCall(pk: PublicKey) = tox.endCall(pk)
     fun sendAudio(pk: PublicKey, pcm: ShortArray, channels: Int, samplingRate: Int) =
         tox.sendAudio(pk, pcm, channels, samplingRate)
+
+    // Extensions, probably move these.
+    fun sendRealTimeText(pk: PublicKey, message: String) = tox.sendRealTimeText(pk, message)
 }

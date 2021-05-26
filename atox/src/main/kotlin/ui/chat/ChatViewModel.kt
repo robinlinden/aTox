@@ -33,6 +33,7 @@ import ltd.evilcorp.domain.feature.ChatManager
 import ltd.evilcorp.domain.feature.ContactManager
 import ltd.evilcorp.domain.feature.FileTransferManager
 import ltd.evilcorp.domain.tox.PublicKey
+import ltd.evilcorp.domain.tox.Tox
 
 private const val TAG = "ChatViewModel"
 
@@ -49,7 +50,8 @@ class ChatViewModel @Inject constructor(
     private val fileTransferManager: FileTransferManager,
     private val notificationHelper: NotificationHelper,
     private val resolver: ContentResolver,
-    private val context: Context
+    private val context: Context,
+    private val tox: Tox,
 ) : ViewModel(), CoroutineScope by GlobalScope {
     private var publicKey = PublicKey("")
     private var sentTyping = false
@@ -74,9 +76,12 @@ class ChatViewModel @Inject constructor(
             }
         }.asLiveData()
 
+    val realTimeText get() = chatManager.realTimeText.asLiveData()
+
     var contactOnline = false
 
     fun send(message: String, type: MessageType) = chatManager.sendMessage(publicKey, message, type)
+    fun sendRealTimeText(message: String) = tox.sendRealTimeText(publicKey, message)
 
     fun clearHistory() = launch {
         chatManager.clearHistory(publicKey)

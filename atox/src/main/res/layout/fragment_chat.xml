@@ -39,6 +39,12 @@
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
+    <TextView android:id="@+id/realTimeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+
     <ListView android:id="@+id/messages"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -51,7 +57,7 @@
             app:layout_constraintBottom_toTopOf="@+id/bottomBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+            app:layout_constraintTop_toBottomOf="@id/realTimeText"/>
 
     <LinearLayout android:id="@+id/bottomBar"
             android:layout_width="match_parent"

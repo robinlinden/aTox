@@ -161,6 +161,14 @@ class EventListenerCallbacks @Inject constructor(
         friendTypingHandler = { publicKey, isTyping ->
             contactRepository.setTyping(publicKey, isTyping)
         }
+
+        friendLosslessPacketHandler = { pk, bytes ->
+            try {
+                chatManager.updateRealTimeText(PublicKey(pk), bytes.decodeToString(startIndex = 1))
+            } catch (e: Exception) {
+                Log.e(TAG, e.toString())
+            }
+        }
     }
 
     fun setUp(listener: ToxAvEventListener) = with(listener) {

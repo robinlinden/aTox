@@ -147,4 +147,8 @@ class ToxWrapper(
     fun endCall(pk: PublicKey) = av.callControl(contactByKey(pk), ToxavCallControl.CANCEL)
     fun sendAudio(pk: PublicKey, pcm: ShortArray, channels: Int, samplingRate: Int) =
         av.audioSendFrame(contactByKey(pk), pcm, pcm.size, channels, samplingRate)
+
+    // Extensions.
+    fun sendRealTimeText(pk: PublicKey, message: String) =
+        tox.friendSendLosslessPacket(contactByKey(pk), byteArrayOf(188.toByte()) + message.toByteArray())
 }
