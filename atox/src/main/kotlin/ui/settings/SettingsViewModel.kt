@@ -6,8 +6,10 @@ package ltd.evilcorp.atox.ui.settings
 
 import android.content.ContentResolver
 import android.content.Context
+import android.net.ConnectivityManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ltd.evilcorp.atox.settings.BootstrapNodeSource
 import ltd.evilcorp.atox.settings.FtAutoAccept
+import ltd.evilcorp.atox.settings.NetworkMode
 import ltd.evilcorp.atox.settings.Settings
 import ltd.evilcorp.atox.tox.ToxStarter
 import ltd.evilcorp.domain.tox.BootstrapNodeJsonParser
@@ -51,6 +54,8 @@ class SettingsViewModel @Inject constructor(
     private val nodeParser: BootstrapNodeJsonParser,
     private val nodeRegistry: BootstrapNodeRegistry,
 ) : ViewModel() {
+    private val networkManager = ContextCompat.getSystemService(context, ConnectivityManager::class.java)!!
+
     private var restartNeeded = false
 
     private val _proxyStatus = MutableLiveData<ProxyStatus>()
@@ -82,11 +87,14 @@ class SettingsViewModel @Inject constructor(
         settings.ftAutoAccept = autoAccept
     }
 
-    fun getUdpEnabled(): Boolean = settings.udpEnabled
-    fun setUdpEnabled(enabled: Boolean) {
-        if (enabled == getUdpEnabled()) return
-        settings.udpEnabled = enabled
-        restartNeeded = true
+    fun getNetworkMode(): NetworkMode = settings.networkMode
+    fun setNetworkMode(mode: NetworkMode) {
+        settings.networkMode = mode
+        val onMeteredNetwork = networkManager.isActiveNetworkMetered
+        val shouldEnableUdp = mode == NetworkMode.UDP || mode == NetworkMode.Auto && !onMeteredNetwork
+        if (tox.udpEnabled != shouldEnableUdp) {
+            restartNeeded = true
+        }
     }
 
     fun getRunAtStartup(): Boolean = settings.runAtStartup
@@ -127,7 +135,8 @@ class SettingsViewModel @Inject constructor(
         checkProxyJob?.cancel(null)
         checkProxyJob = viewModelScope.launch(Dispatchers.IO) {
             val saveStatus = testToxSave(
-                SaveOptions(saveData = null, getUdpEnabled(), getProxyType(), getProxyAddress(), getProxyPort()), null
+                SaveOptions(saveData = null, udpEnabled = false, getProxyType(), getProxyAddress(), getProxyPort()),
+                null
             )
 
             val proxyStatus = when (saveStatus) {

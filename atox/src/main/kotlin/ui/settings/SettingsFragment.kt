@@ -5,7 +5,11 @@
 package ltd.evilcorp.atox.ui.settings
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
@@ -14,6 +18,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -31,6 +36,7 @@ import ltd.evilcorp.atox.R
 import ltd.evilcorp.atox.databinding.FragmentSettingsBinding
 import ltd.evilcorp.atox.settings.BootstrapNodeSource
 import ltd.evilcorp.atox.settings.FtAutoAccept
+import ltd.evilcorp.atox.settings.NetworkMode
 import ltd.evilcorp.atox.ui.BaseFragment
 import ltd.evilcorp.atox.vmFactory
 import ltd.evilcorp.domain.tox.ProxyType
@@ -112,6 +118,18 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
 
         theme.onItemSelectedListener {
             vm.setTheme(it)
+            if (it == 2) {
+//                val cm = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val cm = ContextCompat.getSystemService(requireContext(), ConnectivityManager::class.java)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    cm?.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+                        override fun onAvailable(network: Network) {
+                            super.onAvailable(network)
+                            Log.e("aaaa", "connected to ${cm.isActiveNetworkMetered}")
+                        }
+                    })
+                }
+            }
         }
 
         settingRunAtStartup.isChecked = vm.getRunAtStartup()
@@ -145,12 +163,28 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
         }
 
         if (vm.getProxyType() != ProxyType.None) {
-            vm.setUdpEnabled(false)
+            vm.setNetworkMode(NetworkMode.TCP)
         }
 
-        settingsUdpEnabled.isChecked = vm.getUdpEnabled()
-        settingsUdpEnabled.isEnabled = vm.getProxyType() == ProxyType.None
-        settingsUdpEnabled.setOnClickListener { vm.setUdpEnabled(settingsUdpEnabled.isChecked) }
+        // The order of these must match the order in the NetworkMode enum.
+        val networkModeOptions = mutableListOf(
+            resources.getString(R.string.pref_network_mode_udp),
+            resources.getString(R.string.pref_network_mode_tcp),
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            networkModeOptions.add(resources.getString(R.string.pref_network_mode_auto))
+        }
+
+        settingNetworkMode.adapter = ArrayAdapter(
+            requireContext(), android.R.layout.simple_spinner_item, networkModeOptions
+        ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+
+        settingNetworkMode.setSelection(vm.getNetworkMode().ordinal)
+        settingNetworkMode.isEnabled = vm.getProxyType() == ProxyType.None
+        settingNetworkMode.onItemSelectedListener {
+            vm.setNetworkMode(NetworkMode.values()[it])
+        }
 
         proxyType.adapter = ArrayAdapter.createFromResource(
             requireContext(), R.array.pref_proxy_type_options, android.R.layout.simple_spinner_item
@@ -163,9 +197,11 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
             vm.setProxyType(selected)
 
             // Disable UDP if a proxy is selected to ensure all traffic goes through the proxy.
-            settingsUdpEnabled.isEnabled = selected == ProxyType.None
-            settingsUdpEnabled.isChecked = settingsUdpEnabled.isChecked && selected == ProxyType.None
-            vm.setUdpEnabled(settingsUdpEnabled.isChecked)
+            settingNetworkMode.isEnabled = selected == ProxyType.None
+            if (selected != ProxyType.None) {
+                settingNetworkMode.setSelection(NetworkMode.TCP.ordinal)
+                vm.setNetworkMode(NetworkMode.TCP)
+            }
         }
 
         proxyAddress.setText(vm.getProxyAddress())

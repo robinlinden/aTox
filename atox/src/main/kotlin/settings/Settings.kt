@@ -25,6 +25,12 @@ enum class BootstrapNodeSource {
     UserProvided,
 }
 
+enum class NetworkMode {
+    UDP,
+    TCP,
+    Auto,
+}
+
 class Settings @Inject constructor(private val ctx: Context) {
     private val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
@@ -35,9 +41,9 @@ class Settings @Inject constructor(private val ctx: Context) {
             AppCompatDelegate.setDefaultNightMode(theme)
         }
 
-    var udpEnabled: Boolean
-        get() = preferences.getBoolean("udp_enabled", false)
-        set(enabled) = preferences.edit().putBoolean("udp_enabled", enabled).apply()
+    var networkMode: NetworkMode
+        get() = NetworkMode.values()[preferences.getInt("network_mode", NetworkMode.Auto.ordinal)]
+        set(mode) = preferences.edit { putInt("proxy_type", mode.ordinal) }
 
     var runAtStartup: Boolean
         get() = ctx.packageManager.getComponentEnabledSetting(

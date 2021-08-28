@@ -50,6 +50,9 @@ class Tox @Inject constructor(
     var password: String? = null
         private set
 
+    var udpEnabled: Boolean = false
+        private set
+
     fun changePassword(new: String?) {
         passkey = if (new.isNullOrEmpty()) {
             null
@@ -79,6 +82,7 @@ class Tox @Inject constructor(
         }
 
         this.password = password
+        udpEnabled = saveOption.udpEnabled
         started = true
 
         fun loadContacts() = launch {

@@ -6,12 +6,16 @@ package ltd.evilcorp.atox.tox
 
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkRequest
 import android.os.Build
 import android.util.Log
+import androidx.core.content.ContextCompat
 import im.tox.tox4j.core.exceptions.ToxNewException
 import im.tox.tox4j.crypto.exceptions.ToxDecryptionException
 import javax.inject.Inject
 import ltd.evilcorp.atox.ToxService
+import ltd.evilcorp.atox.settings.NetworkMode
 import ltd.evilcorp.atox.settings.Settings
 import ltd.evilcorp.domain.feature.FileTransferManager
 import ltd.evilcorp.domain.feature.UserManager
@@ -37,11 +41,16 @@ class ToxStarter @Inject constructor(
     private val context: Context,
     private val settings: Settings,
 ) {
+    private val networkManager = ContextCompat.getSystemService(context, ConnectivityManager::class.java)!!
+
     fun startTox(save: ByteArray? = null, password: String? = null): ToxSaveStatus {
+        val onMeteredNetwork = networkManager.isActiveNetworkMetered
+        val udpEnabled =
+            settings.networkMode == NetworkMode.UDP || settings.networkMode == NetworkMode.Auto && !onMeteredNetwork
+
         listenerCallbacks.setUp(eventListener)
         listenerCallbacks.setUp(avEventListener)
-        val options =
-            SaveOptions(save, settings.udpEnabled, settings.proxyType, settings.proxyAddress, settings.proxyPort)
+        val options = SaveOptions(save, udpEnabled, settings.proxyType, settings.proxyAddress, settings.proxyPort)
         try {
             tox.isBootstrapNeeded = true
             tox.start(options, password, eventListener, avEventListener)
