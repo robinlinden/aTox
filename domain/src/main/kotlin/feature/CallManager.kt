@@ -25,6 +25,7 @@ import ltd.evilcorp.domain.tox.Tox
 sealed class CallState {
     object NotInCall : CallState()
     data class InCall(val publicKey: PublicKey, val startTime: Long) : CallState()
+    data class WaitingForContact(val publicKey: PublicKey) : CallState()
 }
 
 private const val TAG = "CallManager"
@@ -45,8 +46,8 @@ class CallManager @Inject constructor(
     private val _pendingCalls = MutableStateFlow<MutableSet<Contact>>(mutableSetOf())
     val pendingCalls: StateFlow<Set<Contact>> get() = _pendingCalls
 
-    private val _sendingAudio = MutableStateFlow(false)
-    val sendingAudio: StateFlow<Boolean> get() = _sendingAudio
+    private val _audioEnabled = MutableStateFlow(false)
+    val audioEnabled: StateFlow<Boolean> get() = _audioEnabled
 
     private val audioManager = ContextCompat.getSystemService(context, AudioManager::class.java)
 
@@ -70,21 +71,35 @@ class CallManager @Inject constructor(
     }
 
     fun startCall(publicKey: PublicKey) {
-        if (pendingCalls.value.any { it.publicKey == publicKey.string() }) {
+        val state = inCall.value
+        if (pendingCalls.value.any { it.publicKey == publicKey.string() } ||
+            state is CallState.WaitingForContact && state.publicKey == publicKey
+        ) {
             tox.answerCall(publicKey)
+            _inCall.value = CallState.InCall(publicKey, SystemClock.elapsedRealtime())
+            audioManager?.mode = AudioManager.MODE_IN_COMMUNICATION
+            removePendingCall(publicKey)
+
+            if (_audioEnabled.value) {
+                startAudioSender(publicKey)
+            }
         } else {
             tox.startCall(publicKey)
+            _inCall.value = CallState.WaitingForContact(publicKey)
         }
-        _inCall.value = CallState.InCall(publicKey, SystemClock.elapsedRealtime())
-        audioManager?.mode = AudioManager.MODE_IN_COMMUNICATION
-        removePendingCall(publicKey)
     }
 
     fun endCall(publicKey: PublicKey) {
         val state = inCall.value
-        if (state is CallState.InCall && state.publicKey == publicKey) {
-            audioManager?.mode = AudioManager.MODE_NORMAL
-            _inCall.value = CallState.NotInCall
+        when {
+            state is CallState.InCall && state.publicKey == publicKey -> {
+                audioManager?.mode = AudioManager.MODE_NORMAL
+                _inCall.value = CallState.NotInCall
+            }
+            state is CallState.WaitingForContact && state.publicKey == publicKey -> {
+                _inCall.value = CallState.NotInCall
+            }
+            else -> {}
         }
 
         removePendingCall(publicKey)
@@ -98,27 +113,33 @@ class CallManager @Inject constructor(
         }
     }
 
-    fun startSendingAudio(): Boolean {
-        val to = (inCall.value as CallState.InCall?)?.publicKey ?: return false
-        val recorder =
-            AudioCapture.create(AUDIO_SAMPLING_RATE_HZ, AUDIO_CHANNELS, AUDIO_SEND_INTERVAL_MS) ?: return false
-        startAudioSender(recorder, to)
-        return true
+    fun enableAudio() {
+        _audioEnabled.value = true
+        val state = inCall.value
+        if (state is CallState.InCall) {
+            startAudioSender(state.publicKey)
+        }
     }
 
-    fun stopSendingAudio() {
-        _sendingAudio.value = false
+    fun disableAudio() {
+        _audioEnabled.value = false
     }
 
     var speakerphoneOn: Boolean
         get() = audioManager?.isSpeakerphoneOn ?: false
         set(value) { audioManager?.isSpeakerphoneOn = value }
 
-    private fun startAudioSender(recorder: AudioCapture, to: PublicKey) {
+    fun startAudioSender(to: PublicKey) {
+        val recorder = AudioCapture.create(AUDIO_SAMPLING_RATE_HZ, AUDIO_CHANNELS, AUDIO_SEND_INTERVAL_MS)
+        if (recorder == null) {
+            _audioEnabled.value = false
+            return
+        }
+
         scope.launch {
             recorder.start()
-            _sendingAudio.value = true
-            while (inCall.value is CallState.InCall && sendingAudio.value) {
+            _audioEnabled.value = true
+            while (inCall.value is CallState.InCall && audioEnabled.value) {
                 val start = System.currentTimeMillis()
                 val audioFrame = recorder.read()
                 try {
@@ -133,7 +154,7 @@ class CallManager @Inject constructor(
             }
             recorder.stop()
             recorder.release()
-            _sendingAudio.value = false
+            _audioEnabled.value = false
         }
     }
 }

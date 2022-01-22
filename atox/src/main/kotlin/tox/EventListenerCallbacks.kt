@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2019-2021 aTox contributors
+// SPDX-FileCopyrightText: 2019-2022 aTox contributors
 //
 // SPDX-License-Identifier: GPL-3.0-only
 
@@ -25,6 +25,7 @@ import ltd.evilcorp.core.repository.FriendRequestRepository
 import ltd.evilcorp.core.repository.MessageRepository
 import ltd.evilcorp.core.repository.UserRepository
 import ltd.evilcorp.core.vo.ConnectionStatus
+import ltd.evilcorp.core.vo.Contact
 import ltd.evilcorp.core.vo.FileKind
 import ltd.evilcorp.core.vo.FileTransfer
 import ltd.evilcorp.core.vo.FriendRequest
@@ -188,6 +189,16 @@ class EventListenerCallbacks @Inject constructor(
                 audioPlayer = null
                 notificationHelper.dismissCallNotification(PublicKey(pk))
                 callManager.endCall(PublicKey(pk))
+            } else {
+                // Contact accepted our call.
+                notificationHelper.dismissCallNotification(PublicKey(pk))
+                scope.launch {
+                    val contact = tryGetContact(pk, "Call") ?: Contact(publicKey = pk, name = "Something went wrong")
+                    notificationHelper.showOngoingCallNotification(contact)
+                    if (callManager.audioEnabled.value) {
+                        callManager.startAudioSender(PublicKey(pk))
+                    }
+                }
             }
         }
 

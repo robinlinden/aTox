@@ -329,6 +329,36 @@ class NotificationHelper @Inject constructor(
         notifier.notify(c.publicKey.hashCode() + CALL.hashCode(), notification)
     }
 
+    fun showWaitingForContactCallNotification(c: Contact) {
+        val notification = NotificationCompat.Builder(context, CALL)
+            .setCategory(NotificationCompat.CATEGORY_CALL)
+            .setSmallIcon(android.R.drawable.ic_menu_call)
+            .setContentTitle(context.getString(R.string.calling))
+            .setContentText(context.getString(R.string.call_waiting_for_contact, c.name))
+            .setContentIntent(deepLinkToCall(PublicKey(c.publicKey)))
+            .addAction(
+                NotificationCompat.Action
+                    .Builder(
+                        IconCompat.createWithResource(context, R.drawable.ic_not_interested),
+                        context.getString(R.string.cancel),
+                        PendingIntentCompat.getBroadcast(
+                            context,
+                            "${c.publicKey}_reject_call".hashCode(),
+                            Intent(context, ActionReceiver::class.java)
+                                .putExtra(KEY_CONTACT_PK, c.publicKey)
+                                .putExtra(KEY_ACTION, Action.CallReject),
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                        )
+                    )
+                    .build()
+            )
+            .setOngoing(true)
+            .setSilent(true)
+            .build()
+
+        notifier.notify(c.publicKey.hashCode() + CALL.hashCode(), notification)
+    }
+
     private fun deepLinkToChat(publicKey: PublicKey, focusMessageBox: Boolean = false) = NavDeepLinkBuilder(context)
         .setGraph(R.navigation.nav_graph)
         .setDestination(R.id.chatFragment)
@@ -338,5 +368,12 @@ class NotificationHelper @Inject constructor(
                 FOCUS_ON_MESSAGE_BOX to focusMessageBox,
             )
         )
+        .createPendingIntent()
+
+    private fun deepLinkToCall(publicKey: PublicKey) = NavDeepLinkBuilder(context)
+        .setGraph(R.navigation.nav_graph)
+        .addDestination(R.id.chatFragment)
+        .addDestination(R.id.callFragment)
+        .setArguments(bundleOf(CONTACT_PUBLIC_KEY to publicKey.string()))
         .createPendingIntent()
 }

@@ -126,7 +126,13 @@ class ActionReceiver : BroadcastReceiver() {
             return@launch
         }
 
-        val isSendingAudio = context.hasPermission(Manifest.permission.RECORD_AUDIO) && callManager.startSendingAudio()
+        val isSendingAudio = if (context.hasPermission(Manifest.permission.RECORD_AUDIO)) {
+            callManager.enableAudio()
+            callManager.audioEnabled.value
+        } else {
+            false
+        }
+
         if (!isSendingAudio) {
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, R.string.call_mic_permission_needed, Toast.LENGTH_LONG).show()

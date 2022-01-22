@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2021 aTox contributors
+// SPDX-FileCopyrightText: 2021-2022 aTox contributors
 //
 // SPDX-License-Identifier: GPL-3.0-only
 
@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import ltd.evilcorp.atox.ui.NotificationHelper
 import ltd.evilcorp.core.vo.Contact
 import ltd.evilcorp.domain.feature.CallManager
+import ltd.evilcorp.domain.feature.CallState
 import ltd.evilcorp.domain.feature.ContactManager
 import ltd.evilcorp.domain.tox.PublicKey
 
@@ -35,7 +36,15 @@ class CallViewModel @Inject constructor(
 
     fun startCall() {
         callManager.startCall(publicKey)
-        scope.launch { notificationHelper.showOngoingCallNotification(contactManager.get(publicKey).first()) }
+        when (callManager.inCall.value) {
+            is CallState.InCall -> scope.launch {
+                notificationHelper.showOngoingCallNotification(contactManager.get(publicKey).first())
+            }
+            is CallState.WaitingForContact -> scope.launch {
+                notificationHelper.showWaitingForContactCallNotification(contactManager.get(publicKey).first())
+            }
+            else -> {}
+        }
     }
 
     fun endCall() = scope.launch {
@@ -43,11 +52,11 @@ class CallViewModel @Inject constructor(
         notificationHelper.dismissCallNotification(publicKey)
     }
 
-    fun startSendingAudio() = callManager.startSendingAudio()
-    fun stopSendingAudio() = callManager.stopSendingAudio()
+    fun enableAudio() = callManager.enableAudio()
+    fun disableAudio() = callManager.disableAudio()
 
     val inCall = callManager.inCall
-    val sendingAudio = callManager.sendingAudio
+    val audioEnabled = callManager.audioEnabled
 
     var speakerphoneOn by callManager::speakerphoneOn
 }

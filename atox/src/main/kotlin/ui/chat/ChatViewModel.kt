@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2019-2021 aTox contributors
+// SPDX-FileCopyrightText: 2019-2022 aTox contributors
 //
 // SPDX-License-Identifier: GPL-3.0-only
 
@@ -44,6 +44,7 @@ enum class CallAvailability {
     Unavailable,
     Available,
     Active,
+    Calling,
 }
 
 class ChatViewModel @Inject constructor(
@@ -75,6 +76,13 @@ class ChatViewModel @Inject constructor(
                 is CallState.InCall -> {
                     if (callState.publicKey == publicKey) {
                         CallAvailability.Active
+                    } else {
+                        CallAvailability.Unavailable
+                    }
+                }
+                is CallState.WaitingForContact -> {
+                    if (callState.publicKey == publicKey) {
+                        CallAvailability.Calling
                     } else {
                         CallAvailability.Unavailable
                     }

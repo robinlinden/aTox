@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2021 aTox contributors
+// SPDX-FileCopyrightText: 2021-2022 aTox contributors
 //
 // SPDX-License-Identifier: GPL-3.0-only
 
@@ -38,7 +38,7 @@ class CallFragment : BaseFragment<FragmentCallBinding>(FragmentCallBinding::infl
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) {
-            vm.startSendingAudio()
+            vm.enableAudio()
         } else {
             Toast.makeText(requireContext(), getString(R.string.call_mic_permission_needed), Toast.LENGTH_LONG).show()
         }
@@ -61,7 +61,7 @@ class CallFragment : BaseFragment<FragmentCallBinding>(FragmentCallBinding::infl
             findNavController().popBackStack()
         }
 
-        vm.sendingAudio.asLiveData().observe(viewLifecycleOwner) { sending ->
+        vm.audioEnabled.asLiveData().observe(viewLifecycleOwner) { sending ->
             if (sending) {
                 microphoneControl.setImageResource(R.drawable.ic_mic)
             } else {
@@ -70,11 +70,11 @@ class CallFragment : BaseFragment<FragmentCallBinding>(FragmentCallBinding::infl
         }
 
         microphoneControl.setOnClickListener {
-            if (vm.sendingAudio.value) {
-                vm.stopSendingAudio()
+            if (vm.audioEnabled.value) {
+                vm.disableAudio()
             } else {
                 if (requireContext().hasPermission(PERMISSION)) {
-                    vm.startSendingAudio()
+                    vm.enableAudio()
                 } else {
                     requestPermissionLauncher.launch(PERMISSION)
                 }
@@ -100,24 +100,23 @@ class CallFragment : BaseFragment<FragmentCallBinding>(FragmentCallBinding::infl
             return
         }
 
-        startCall()
+        if (vm.inCall.value is CallState.NotInCall) {
+            vm.startCall()
+        }
+
+        vm.inCall.asLiveData().observe(viewLifecycleOwner) { inCall ->
+            if (inCall == CallState.NotInCall) {
+                findNavController().popBackStack()
+            }
+        }
 
         if (requireContext().hasPermission(PERMISSION)) {
-            vm.startSendingAudio()
+            vm.enableAudio()
         }
     }
 
     private fun updateSpeakerphoneIcon() {
         val icon = if (vm.speakerphoneOn) R.drawable.ic_speakerphone else R.drawable.ic_speakerphone_off
         binding.speakerphone.setImageResource(icon)
-    }
-
-    private fun startCall() {
-        vm.startCall()
-        vm.inCall.asLiveData().observe(viewLifecycleOwner) { inCall ->
-            if (inCall == CallState.NotInCall) {
-                findNavController().popBackStack()
-            }
-        }
     }
 }
