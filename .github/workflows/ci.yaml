@@ -120,3 +120,9 @@ jobs:
           sudo chmod +x buildifier
     - name: Check
       run: ./buildifier --lint=warn --warnings=all -mode diff WORKSPACE $(find . -type f -iname BUILD.*)
+  
+  tox4j-docker:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: docker/setup-buildx-action@v1
+    - uses: docker/build-push-action@v2
