@@ -57,10 +57,12 @@ const val FOCUS_ON_MESSAGE_BOX = "focusOnMessageBox"
 private const val MAX_CONFIRM_DELETE_STRING_LENGTH = 20
 
 class OpenMultiplePersistableDocuments : ActivityResultContracts.OpenMultipleDocuments() {
-    override fun createIntent(context: Context, input: Array<String>): Intent {
-        return super.createIntent(context, input)
-            .addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
-    }
+    override fun createIntent(context: Context, input: Array<String>): Intent =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            super.createIntent(context, input).addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+        } else {
+            super.createIntent(context, input)
+        }
 }
 
 class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::inflate) {
@@ -80,7 +82,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         registerForActivityResult(OpenMultiplePersistableDocuments()) { files ->
             viewModel.setActiveChat(PublicKey(contactPubKey))
             for (file in files) {
-                activity?.contentResolver?.takePersistableUriPermission(file, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                    activity?.contentResolver?.takePersistableUriPermission(file, Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 viewModel.createFt(file)
             }
         }

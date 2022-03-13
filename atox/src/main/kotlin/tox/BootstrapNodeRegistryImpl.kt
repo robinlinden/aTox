@@ -39,7 +39,7 @@ class BootstrapNodeRegistryImpl @Inject constructor(
                 context.resources.openRawResource(R.raw.nodes).use {
                     val bytes = ByteArray(it.available())
                     it.read(bytes)
-                    String(bytes, StandardCharsets.UTF_8)
+                    String(bytes)
                 }
             } else {
                 File(context.filesDir, "user_nodes.json").readBytes().decodeToString()

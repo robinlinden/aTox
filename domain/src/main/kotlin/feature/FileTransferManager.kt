@@ -8,6 +8,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.provider.OpenableColumns
 import android.util.Log
 import im.tox.tox4j.core.enums.ToxFileControl
@@ -59,9 +60,11 @@ class FileTransferManager @Inject constructor(
     init {
         File(context.filesDir, "ft").mkdir()
         File(context.filesDir, "avatar").mkdir()
-        resolver.persistedUriPermissions.forEach {
-            Log.w(TAG, "Clearing leftover permission for ${it.uri}")
-            releaseFilePermission(it.uri)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            resolver.persistedUriPermissions.forEach {
+                Log.w(TAG, "Clearing leftover permission for ${it.uri}")
+                releaseFilePermission(it.uri)
+            }
         }
     }
 
@@ -315,8 +318,10 @@ class FileTransferManager @Inject constructor(
             return
         }
 
-        Log.i(TAG, "Releasing read permission for $uri")
-        resolver.releasePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Log.i(TAG, "Releasing read permission for $uri")
+            resolver.releasePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
     }
 
     private fun makeDestination(ft: FileTransfer) =
