@@ -22,11 +22,12 @@ enum class ToxSaveStatus {
     SaveNotFound,
 }
 
+@OptIn(ExperimentalStdlibApi::class)
 fun testToxSave(options: SaveOptions, password: String?): ToxSaveStatus = try {
     val toxOptions = if (password == null) {
         options.toToxOptions()
     } else {
-        val salt = ToxCryptoImpl.getSalt(options.saveData)
+        val salt = ToxCryptoImpl.getSalt(options.saveData!!)
         val passkey = ToxCryptoImpl.passKeyDeriveWithSalt(password.toByteArray(), salt)
         options.copy(saveData = ToxCryptoImpl.decrypt(options.saveData, passkey)).toToxOptions()
     }
@@ -34,7 +35,7 @@ fun testToxSave(options: SaveOptions, password: String?): ToxSaveStatus = try {
     t.close()
     ToxSaveStatus.Ok
 } catch (e: ToxNewException) {
-    when (e.code()!!) {
+    when (e.code) {
         ToxNewException.Code.LOAD_BAD_FORMAT -> ToxSaveStatus.BadFormat
         ToxNewException.Code.LOAD_ENCRYPTED -> ToxSaveStatus.Encrypted
         ToxNewException.Code.MALLOC -> ToxSaveStatus.OutOfMemory
@@ -44,5 +45,6 @@ fun testToxSave(options: SaveOptions, password: String?): ToxSaveStatus = try {
         ToxNewException.Code.PROXY_BAD_PORT -> ToxSaveStatus.BadProxyPort
         ToxNewException.Code.PROXY_BAD_TYPE -> ToxSaveStatus.BadProxyType
         ToxNewException.Code.PROXY_NOT_FOUND -> ToxSaveStatus.ProxyNotFound
+        else -> TODO()
     }
 }

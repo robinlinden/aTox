@@ -4,6 +4,7 @@
 
 package ltd.evilcorp.domain.tox
 
+import im.tox.tox4j.core.data.Port
 import im.tox.tox4j.core.enums.ToxConnection
 import im.tox.tox4j.core.enums.ToxFileKind
 import im.tox.tox4j.core.enums.ToxMessageType
@@ -26,14 +27,14 @@ fun SaveOptions.toToxOptions(): ToxOptions = ToxOptions(
     udpEnabled,
     true,
     when (proxyType) {
-        ProxyType.None -> ProxyOptions.`None$`()
-        ProxyType.HTTP -> ProxyOptions.Http(proxyAddress, proxyPort)
-        ProxyType.SOCKS5 -> ProxyOptions.Socks5(proxyAddress, proxyPort)
+        ProxyType.None -> ProxyOptions.None
+        ProxyType.HTTP -> ProxyOptions.Http(proxyAddress, proxyPort.toUShort())
+        ProxyType.SOCKS5 -> ProxyOptions.Socks5(proxyAddress, proxyPort.toUShort())
     },
-    0,
-    0,
-    0,
-    if (saveData == null) SaveDataOptions.`None$`() else SaveDataOptions.ToxSave(saveData),
+    0U,
+    0U,
+    0U,
+    if (saveData == null) SaveDataOptions.None else SaveDataOptions.ToxSave(saveData),
     true,
 )
 

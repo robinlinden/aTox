@@ -277,37 +277,24 @@ local_repository(
     path = "bazel/psocket",
 )
 
-JVM_TOXCORE_API_TAG = "c0f37cfd77d79d5826ea566127f60fce838858c2"
-
-# https://github.com/TokTok/jvm-toxcore-api
-http_archive(
-    name = "jvm-toxcore-api",
-    build_file = "//bazel:jvm-toxcore-api.BUILD",
-    sha256 = "ab129f7d845d87e1b6ee0a2b4bc34acede45480dd32a15f85a08e9dfca7cedf6",
-    strip_prefix = "jvm-toxcore-api-%s" % JVM_TOXCORE_API_TAG,
-    url = "https://github.com/TokTok/jvm-toxcore-api/archive/%s.tar.gz" % JVM_TOXCORE_API_TAG,
-)
-
-JVM_TOXCORE_C_TAG = "f697eef5d0a16a025b187c3369288986e89bde2b"
+JVM_TOXCORE_C_TAG = "9a28155ae4f39906400b38207a620669309be602"
 
 # https://github.com/TokTok/jvm-toxcore-c
 http_archive(
     name = "jvm-toxcore-c",
-    build_file = "//bazel:jvm-toxcore-c.BUILD",
-    sha256 = "93fb5cd0a1f45561e52cb585287cec98415d80b655d847278aa51c8d26f80124",
+    integrity = "sha256-p3dfQUjQXlb/Ozylfy0shk6wSMUVkZOUPuFmnZbggdQ=",
+    patch_cmds = [
+        # Delete references to the "project" stuff that lives in toktok-stack.
+        "sed -i /project/d BUILD.bazel",
+
+        # Replace "//c-toxcore" w/ "@c-toxcore" to get internal dependencies between libraries working.
+        "sed -i 's|//c-toxcore|@c-toxcore|g' BUILD.bazel",
+    ],
+    repo_mapping = {
+        "@rules_kotlin": "@io_bazel_rules_kotlin",
+    },
     strip_prefix = "jvm-toxcore-c-%s" % JVM_TOXCORE_C_TAG,
     url = "https://github.com/TokTok/jvm-toxcore-c/archive/%s.tar.gz" % JVM_TOXCORE_C_TAG,
-)
-
-JVM_MACROS_TAG = "8e8991581bec396861678012cab302ba09ced629"
-
-# https://github.com/TokTok/jvm-macros
-http_archive(
-    name = "jvm-macros",
-    build_file = "//bazel:jvm-macros.BUILD",
-    sha256 = "3f2e7c024347085596ad3c90d236e0e6fddf5c7c18c03a66a058c4d334f24888",
-    strip_prefix = "jvm-macros-%s" % JVM_MACROS_TAG,
-    url = "https://github.com/TokTok/jvm-macros/archive/%s.tar.gz" % JVM_MACROS_TAG,
 )
 
 C_TOXCORE_TAG = "0.2.20"

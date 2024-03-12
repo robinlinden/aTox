@@ -5,14 +5,17 @@
 package ltd.evilcorp.domain.tox
 
 import im.tox.tox4j.av.callbacks.ToxAvEventListener
+import im.tox.tox4j.av.data.AudioChannels
+import im.tox.tox4j.av.data.BitRate
+import im.tox.tox4j.av.data.Height
+import im.tox.tox4j.av.data.SamplingRate
+import im.tox.tox4j.av.data.Width
 import im.tox.tox4j.av.enums.ToxavFriendCallState
-import java.util.EnumSet
+import im.tox.tox4j.core.data.ToxFriendNumber
 import javax.inject.Inject
-import scala.Option
-import scala.Tuple3
 
 typealias CallHandler = (pk: String, audioEnabled: Boolean, videoEnabled: Boolean) -> Unit
-typealias CallStateHandler = (pk: String, callState: EnumSet<ToxavFriendCallState>) -> Unit
+typealias CallStateHandler = (pk: String, callState: Set<ToxavFriendCallState>) -> Unit
 typealias VideoBitRateHandler = (pk: String, bitRate: Int) -> Unit
 typealias VideoReceiveFrameHandler = (
     pk: String,
@@ -39,43 +42,50 @@ class ToxAvEventListener @Inject constructor() : ToxAvEventListener<Unit> {
     var audioReceiveFrameHandler: AudioReceiveFrameHandler = { _, _, _, _ -> }
     var audioBitRateHandler: AudioBitRateHandler = { _, _ -> }
 
-    private fun keyFor(friendNo: Int) = contactMapping.find { it.second == friendNo }!!.first.string()
+    private fun keyFor(friendNo: ToxFriendNumber) = contactMapping.find { it.second == friendNo.value }!!.first.string()
 
-    override fun call(friendNo: Int, audioEnabled: Boolean, videoEnabled: Boolean, s: Unit?) =
-        callHandler(keyFor(friendNo), audioEnabled, videoEnabled)
+    override fun call(friendNumber: ToxFriendNumber, audioEnabled: Boolean, videoEnabled: Boolean, state: Unit) =
+        callHandler(keyFor(friendNumber), audioEnabled, videoEnabled)
 
-    override fun videoBitRate(friendNo: Int, bitRate: Int, s: Unit?) = videoBitRateHandler(keyFor(friendNo), bitRate)
+    override fun videoBitRate(friendNumber: ToxFriendNumber, videoBitRate: BitRate, state: Unit) =
+        videoBitRateHandler(keyFor(friendNumber), videoBitRate.value)
 
     override fun videoFrameCachedYUV(
-        height: Int,
+        height: Height,
         yStride: Int,
         uStride: Int,
         vStride: Int,
-    ): Option<Tuple3<ByteArray, ByteArray, ByteArray>> = Option.empty()
+    ): Triple<ByteArray, ByteArray, ByteArray>? = null
 
     override fun videoReceiveFrame(
-        friendNo: Int,
-        width: Int,
-        height: Int,
+        friendNumber: ToxFriendNumber,
+        width: Width,
+        height: Height,
         y: ByteArray,
         u: ByteArray,
         v: ByteArray,
         yStride: Int,
         uStride: Int,
         vStride: Int,
-        s: Unit?,
+        state: Unit,
     ) = videoReceiveFrameHandler(
-        keyFor(friendNo),
-        width, height,
+        keyFor(friendNumber),
+        width.value, height.value,
         y, u, v,
         yStride, uStride, vStride,
     )
 
-    override fun callState(friendNo: Int, callState: EnumSet<ToxavFriendCallState>, s: Unit?) =
-        callStateHandler(keyFor(friendNo), callState)
+    override fun callState(friendNumber: ToxFriendNumber, callState: Set<ToxavFriendCallState>, state: Unit) =
+        callStateHandler(keyFor(friendNumber), callState)
 
-    override fun audioReceiveFrame(friendNo: Int, pcm: ShortArray, channels: Int, samplingRate: Int, s: Unit?) =
-        audioReceiveFrameHandler(keyFor(friendNo), pcm, channels, samplingRate)
+    override fun audioReceiveFrame(
+        friendNumber: ToxFriendNumber,
+        pcm: ShortArray,
+        channels: AudioChannels,
+        samplingRate: SamplingRate,
+        state: Unit,
+    ) = audioReceiveFrameHandler(keyFor(friendNumber), pcm, channels.value, samplingRate.value)
 
-    override fun audioBitRate(friendNo: Int, bitRate: Int, s: Unit?) = audioBitRateHandler(keyFor(friendNo), bitRate)
+    override fun audioBitRate(friendNumber: ToxFriendNumber, audioBitRate: BitRate, state: Unit) =
+        audioBitRateHandler(keyFor(friendNumber), audioBitRate.value)
 }

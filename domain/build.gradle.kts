@@ -62,8 +62,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.javax.inject)
     api(libs.kotlinx.coroutines.core)
-    api(libs.tox4j.api)
-    implementation(libs.tox4j.c)
+    api(libs.tox4j.blessed)
+//    implementation(libs.tox4j.c)
 
     testImplementation(kotlin("test"))
     androidTestImplementation(kotlin("test"))

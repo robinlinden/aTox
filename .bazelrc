@@ -1,5 +1,7 @@
 build --noenable_bzlmod
 
+build --cxxopt=-std=c++17
+
 build --per_file_copt='[-_]avx\\.c$@-mavx'
 build --per_file_copt='[-_]avx2\\.c$@-mavx2'
 build --per_file_copt='[-_]sse\\.c$@-mssse3,-msse4'

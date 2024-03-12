@@ -57,7 +57,7 @@ class Tox @Inject constructor(
         passkey = if (new.isNullOrEmpty()) {
             null
         } else {
-            val salt = ByteArray(ToxCryptoConstants.SaltLength())
+            val salt = ByteArray(ToxCryptoConstants.SALT_LENGTH)
             Random.Default.nextBytes(salt)
             ToxCryptoImpl.passKeyDeriveWithSalt(new.toByteArray(), salt)
         }
@@ -72,12 +72,12 @@ class Tox @Inject constructor(
             passkey = null
             ToxWrapper(listener, avListener, saveOption)
         } else {
-            val salt = ToxCryptoImpl.getSalt(saveOption.saveData)
+            val salt = ToxCryptoImpl.getSalt(saveOption.saveData!!)
             passkey = ToxCryptoImpl.passKeyDeriveWithSalt(password.toByteArray(), salt)
             ToxWrapper(
                 listener,
                 avListener,
-                saveOption.copy(saveData = ToxCryptoImpl.decrypt(saveOption.saveData, passkey)),
+                saveOption.copy(saveData = ToxCryptoImpl.decrypt(saveOption.saveData, passkey!!)),
             )
         }
 
