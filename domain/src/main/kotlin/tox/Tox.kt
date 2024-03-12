@@ -7,8 +7,9 @@ package ltd.evilcorp.domain.tox
 
 import android.util.Log
 import im.tox.tox4j.core.exceptions.ToxBootstrapException
+import im.tox.tox4j.crypto.ToxCrypto
 import im.tox.tox4j.crypto.ToxCryptoConstants
-import im.tox.tox4j.impl.jni.ToxCryptoImpl
+//import im.tox.tox4j.impl.jni.ToxCryptoImpl
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.collections.forEach as kForEach
@@ -53,13 +54,15 @@ class Tox @Inject constructor(
     var password: String? = null
         private set
 
+    private lateinit var crypto: ToxCrypto<ByteArray>
+
     fun changePassword(new: String?) {
         passkey = if (new.isNullOrEmpty()) {
             null
         } else {
-            val salt = ByteArray(ToxCryptoConstants.SaltLength())
+            val salt = ByteArray(ToxCryptoConstants.SALT_LENGTH)
             Random.Default.nextBytes(salt)
-            ToxCryptoImpl.passKeyDeriveWithSalt(new.toByteArray(), salt)
+            crypto.passKeyDeriveWithSalt(new.toByteArray(), salt)
         }
         password = new
         save()
@@ -72,12 +75,12 @@ class Tox @Inject constructor(
             passkey = null
             ToxWrapper(listener, avListener, saveOption)
         } else {
-            val salt = ToxCryptoImpl.getSalt(saveOption.saveData)
-            passkey = ToxCryptoImpl.passKeyDeriveWithSalt(password.toByteArray(), salt)
+            val salt = crypto.getSalt(saveOption.saveData!!)
+            passkey = crypto.passKeyDeriveWithSalt(password.toByteArray(), salt)
             ToxWrapper(
                 listener,
                 avListener,
-                saveOption.copy(saveData = ToxCryptoImpl.decrypt(saveOption.saveData, passkey)),
+                saveOption.copy(saveData = crypto.decrypt(saveOption.saveData, passkey!!)),
             )
         }
 
@@ -151,7 +154,7 @@ class Tox @Inject constructor(
                 if (passkey == null) {
                     tox.getSaveData()
                 } else {
-                    ToxCryptoImpl.encrypt(tox.getSaveData(), passkey)
+                    crypto.encrypt(tox.getSaveData(), passkey)
                 },
             )
         }
@@ -208,7 +211,7 @@ class Tox @Inject constructor(
         return if (passkey == null) {
             tox.getSaveData()
         } else {
-            ToxCryptoImpl.encrypt(tox.getSaveData(), passkey)
+            crypto.encrypt(tox.getSaveData(), passkey)
         }
     }
 

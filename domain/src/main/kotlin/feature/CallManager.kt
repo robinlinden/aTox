@@ -92,7 +92,7 @@ class CallManager @Inject constructor(
         try {
             tox.endCall(publicKey)
         } catch (e: ToxavCallControlException) {
-            if (e.code() != ToxavCallControlException.Code.FRIEND_NOT_IN_CALL) {
+            if (e.code != ToxavCallControlException.Code.FRIEND_NOT_IN_CALL) {
                 throw e
             }
         }
