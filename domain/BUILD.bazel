@@ -1,4 +1,4 @@
-load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library")
+load("@io_bazel_rules_kotlin//kotlin:android.bzl", "kt_android_library", "kt_android_local_test")
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_test")
 
 kt_android_library(
@@ -40,4 +40,42 @@ kt_jvm_test(
     srcs = ["src/test/kotlin/tox/ToxUtilTest.kt"],
     test_class = "ltd.evilcorp.domain.tox.ToxUtilTest",
     deps = TEST_DEPS,
+)
+
+# <uses-permission android:name="android.permission.INTERNET"/>
+# <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+TEST_MANIFEST = """
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="ltd.evilcorp.atox.test">
+    <uses-sdk
+            android:minSdkVersion="19"
+            android:targetSdkVersion="31"/>
+</manifest>
+"""
+
+genrule(
+    name = "test_manifest",
+    outs = ["AndroidManifest.xml"],
+    cmd = "echo '%s' > $@" % TEST_MANIFEST,
+)
+
+# Current problem: how do I get libtox4j-c.so onto the classpath?
+kt_android_local_test(
+    name = "ToxTest",
+    srcs = ["src/androidTest/kotlin/tox/ToxTest.kt"],
+    custom_package = "ltd.evilcorp.domain.tox",
+    data = ["@jvm-toxcore-c//:libtox4j-c.so"],
+    #jvm_flags = ["-Djava.library.path=external/jvm-toxcore-c"],
+    manifest = ":test_manifest",
+    test_class = "ltd.evilcorp.domain.tox.ToxTest",
+    runtime_deps = ["@jvm-toxcore-c//:libtox4j-c.so"],
+    deps = [
+        ":domain",
+        "@maven//:androidx_test_ext_junit",
+        "@maven//:androidx_test_runner",
+        "@maven//:org_jetbrains_kotlin_kotlin_test_junit",
+        "@maven//:org_jetbrains_kotlinx_kotlinx_coroutines_test",
+        "@maven//:org_robolectric_robolectric",
+        "@robolectric//bazel:android-all",
+    ],
 )

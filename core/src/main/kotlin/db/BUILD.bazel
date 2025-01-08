@@ -9,6 +9,7 @@ kt_android_library(
     deps = [
         ":androidx_room_room_compiler_library",
         "//core/src/main/kotlin/vo",
+        "@maven//:androidx_lifecycle_lifecycle_livedata_ktx",
         "@maven//:androidx_room_room_runtime",
         "@maven//:org_jetbrains_kotlinx_kotlinx_coroutines_core",
     ],

@@ -99,6 +99,10 @@ http_archive(
     name = "io_bazel_rules_kotlin",
     integrity = "sha256-O3cpdv7Hvc2h2EudObF2WJQkwEfrIXW+0JqsYw5Qr0M=",
     url = "https://github.com/bazelbuild/rules_kotlin/releases/download/%s/rules_kotlin-%s.tar.gz" % (RULES_KOTLIN_TAG, RULES_KOTLIN_TAG),
+    patch_cmds = [
+        "sed -i'' -e '100i\\\n        runtime_deps = None,\\\n' kotlin/internal/jvm/android.bzl",
+        "sed -i'' -e '120i\\\n        runtime_deps = runtime_deps,\\\n' kotlin/internal/jvm/android.bzl",
+    ]
 )
 
 RULES_SCALA_TAG = "6.6.0"
@@ -239,6 +243,7 @@ maven_install(
         "androidx.room:room-runtime:2.2.6",
         "androidx.room:room-testing:2.2.6",
         "androidx.test.ext:junit:1.2.1",
+        "androidx.test:runner:1.6.2",
         "com.google.android.material:material:1.4.0",
         "com.google.code.gson:gson:2.8.6",
         "com.google.guava:guava:19.0",
