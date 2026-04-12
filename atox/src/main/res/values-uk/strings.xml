@@ -22,7 +22,7 @@
     <string name="bad_type">Невірний тип</string>
     <string name="pref_heading_proxy">Проксі</string>
     <string name="pref_heading_port">Порт</string>
-    <string name="pref_heading_address">IP адреса</string>
+    <string name="pref_heading_address">Aдреса</string>
     <string name="save_as">Зберегти як…</string>
     <string name="completed">Завершено</string>
     <string name="cancelled">Скасовано</string>
