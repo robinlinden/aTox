@@ -19,14 +19,14 @@
     <string name="delete_contact">Efase kontak</string>
     <string name="message">Mesaj</string>
     <string name="name">Non</string>
-    <string name="name_default">itilizatè aTox</string>
+    <string name="name_default">Itilizatè aTox</string>
     <string name="no_contacts_call_to_action">Kisa wap tann? Ajoute yon kontak pou kòmanse!</string>
     <string name="navigation_drawer_close">Fèmen tiwa navigasyon an</string>
     <string name="navigation_drawer_open">Louvri tiwa navigasyon</string>
     <string name="profile_photo_description">Foto pwofil</string>
     <string name="reject">Rejte</string>
     <string name="send">Voye</string>
-    <string name="sending">voye</string>
+    <string name="sending">Voye…</string>
     <string name="settings">Anviwònman</string>
     <string name="status_indicator">Endikatè estati</string>
     <string name="status_message">Mesaj sitiyasyon</string>
@@ -35,7 +35,7 @@
     <string name="tox_id_error_length">Tox ID dwe genyen 76 karaktè (%1$d/76)</string>
     <string name="tox_id_error_checksum">Sòm chèk ki pa valab</string>
     <string name="tox_id_error_hex">Sèlman hex pèmèt</string>
-    <string name="tox_id_share">Pataje ID Tox</string>
+    <string name="tox_id_share">Pataje Tox ID</string>
     <string name="update">Mizajou</string>
     <string name="clear_history_cleared">Istwa efase</string>
     <string name="clear_history_confirm">Èske w sèten ou vle efase istwa chat ou a ak %1$s?</string>
