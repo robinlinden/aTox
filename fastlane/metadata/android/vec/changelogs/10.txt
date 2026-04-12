@@ -1,5 +1,5 @@
 Audio ciamada support
-Opsion par doperar co un encrypted Tox profiło
+Opsion par doperar co na encrypted Tox fegura
 Opsion par canbiar el to NoSpam
 Abiłità par riserver sconpartimenti de mesajo
 Abiłità par vardar el to Tox ID cofà un QR code
