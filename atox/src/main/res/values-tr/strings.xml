@@ -60,7 +60,7 @@
     <string name="delete">Sil</string>
     <string name="attach_file">Dosya ekle</string>
     <string name="mimetype_handler_not_found">\"%1$s\" ortam türünü kullanabilecek kurulu bir uygulama bulunamadı</string>
-    <string name="status_dialog_edit_user_status">Durumunuzu değiştirin</string>
+    <string name="status_dialog_edit_user_status">Durumunuzu düzenleyin</string>
     <string name="from">Kimden</string>
     <string name="status_busy">Meşgul</string>
     <string name="status_away">Dışarıda</string>
