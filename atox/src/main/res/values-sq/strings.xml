@@ -16,7 +16,7 @@
     <string name="messages">Mesazhet</string>
     <string name="messages_incoming">Mesazhet hyrëse</string>
     <string name="name">Emri</string>
-    <string name="name_default">përdorues i aTox</string>
+    <string name="name_default">Përdorues i aTox</string>
     <string name="no_contacts_call_to_action">Çfarë po prisni? Shtoni një kontakt për të filluar!</string>
     <string name="navigation_drawer_close">Mbyll sirtarin e navigimit</string>
     <string name="navigation_drawer_open">Hap sirtarin e navigimit</string>
@@ -29,7 +29,7 @@
     <string name="status_message">Mesazh statusi</string>
     <string name="status_message_default">Ju sjell drejtpërdrejt, nga aTox</string>
     <string name="tox_id">ID Tox</string>
-    <string name="tox_id_error_length">ID-ja e TOX duhet të jetë 76 karaktere (%1$d/76)</string>
+    <string name="tox_id_error_length">ID-ja e Tox duhet të jetë 76 karaktere (%1$d/76)</string>
     <string name="tox_id_error_checksum">Shuma kontrolluese e pavlefshme</string>
     <string name="tox_id_error_hex">Lejohet vetëm heksi</string>
     <string name="tox_id_share">Ndani ID Tox</string>
@@ -47,7 +47,7 @@
     <string name="import_tox_save_failed">Importimi dështoi: %1$s</string>
     <string name="export_tox_save">Export Tox Ruaj</string>
     <string name="tox_save_exported">Tox save u eksportua</string>
-    <string name="never">kurrë</string>
+    <string name="never">Kurrë</string>
     <string name="info">Informacion</string>
     <string name="atox_offline">Jashtë linje</string>
     <string name="atox_connected_with_tcp">I lidhur (TCP)</string>
@@ -128,8 +128,8 @@
     <string name="in_call_with">Në telefonatë me %1$s</string>
     <string name="tox_id_error_self_add">Nuk mund ta shtosh veten</string>
     <string name="save">Ruaj</string>
-    <string name="pref_nospam">Nuk ka Spam</string>
-    <string name="pref_nospam_description">Ndryshimi i \"Pa Spam\" ndryshon ID-në tuaj të Tox-it, që do të thotë se kërkesat për miqësi duhet të dërgohen te ajo e azhurnuar.</string>
+    <string name="pref_nospam">Pa Spam</string>
+    <string name="pref_nospam_description">Ndryshimi i \"Pa Spam\" ndryshon ID-në tuaj të Tox-it, që do të thotë se kërkesat për miqësi duhet të dërgohen te ajo e azhurnuar</string>
     <string name="pref_disabled_tox_error">Çaktivizuar për shkak të një gabimi gjatë nisjes së Tox</string>
     <string name="saved">U ruajt</string>
     <string name="delete_message">Fshi mesazhin</string>
@@ -147,7 +147,7 @@
     <string name="password_updated">Fjalëkalimi u përditësua</string>
     <string name="passwords_must_match">Fjalëkalimet duhet të përputhen</string>
     <string name="pref_block_screenshots">Blloko pamjet e ekranit të aTox</string>
-    <string name="pref_block_screenshots_description">Kjo **vetëm** bllokon pamjet e ekranit në **pajisjen tuaj** dhe nuk ofron mbrojtje kundër kontakteve tuaja që bëjnë pamje të ekranit ose që i ruajnë bisedat tuaja në ndonjë mënyrë tjetër.</string>
+    <string name="pref_block_screenshots_description">Kjo **vetëm** bllokon pamjet e ekranit në **pajisjen tuaj** dhe nuk ofron mbrojtje kundër kontakteve tuaja që bëjnë pamje të ekranit ose që i ruajnë bisedat tuaja në ndonjë mënyrë tjetër</string>
     <string name="return_to_chat">Kthehu në bisedë</string>
     <string name="speakerphone_toggle">Aktivizo/çaktivizo altoparlantin</string>
     <string name="channel_profile_locked_explanation">Dërgohet kur profili juaj duhet të zhbllokohet që aTox të funksionojë</string>
