@@ -26,11 +26,11 @@
     <string name="sending">Изпращане…</string>
     <string name="settings">Настройки</string>
     <string name="status_indicator">Показател за състояние</string>
-    <string name="tox_id">Идентификатор на Тох</string>
-    <string name="tox_id_error_length">Идентификаторът на Тох трябва да бъде дълъг 76 знака (%1$d/76)</string>
+    <string name="tox_id">Tox ID</string>
+    <string name="tox_id_error_length">Tox ID трябва да съдържа точно 76 знака (%1$d/76)</string>
     <string name="tox_id_error_checksum">Невярна контролна сума</string>
     <string name="tox_id_error_hex">Разрешени са само шестнадесетични символи</string>
-    <string name="tox_id_share">Споделяне на идентификатор на Тох</string>
+    <string name="tox_id_share">Споделяне на Tox ID</string>
     <string name="update">Обновяване</string>
     <string name="quit_confirm">Приложението да бъде ли затворено?</string>
     <string name="friend_requests">Заявки за контакти</string>
@@ -70,7 +70,7 @@
     <string name="profile_nickname">Променяне на псевдоним</string>
     <string name="profile_status_message">Променяне на съобщението за състоянието</string>
     <string name="profile">Профил</string>
-    <string name="tox_id_error_already_exists">Контакт с този идентификатор на Tox вече съществува</string>
+    <string name="tox_id_error_already_exists">Контакт с този Tox ID вече съществува</string>
     <string name="pref_heading_general">Общи</string>
     <string name="pref_run_at_startup">Стартиране с Андроид</string>
     <string name="friend_request">Завяка за контакт</string>
@@ -107,7 +107,7 @@
     <string name="calls">Обаждания</string>
     <string name="ongoing_call">Текущ разговор</string>
     <string name="in_call_with">В разговор с/ъс %1$s</string>
-    <string name="pref_nospam_description">Промяната на полето АнтиСпам променя също и вашия идентификатор на Tox, което означава, че заявките за контакти трябва да бъдат изпращани до новия номер</string>
+    <string name="pref_nospam_description">Промяната на полето АнтиСпам променя също и Tox ID, което означава, че заявките за контакти трябва да бъдат изпращани до новия идентификатор</string>
     <string name="pref_disabled_tox_error">Изключено поради грешка при стартиране на Tox</string>
     <string name="saved">Запазено</string>
     <string name="delete_message">Премахване на съобщение</string>
