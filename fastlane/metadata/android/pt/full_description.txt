@@ -7,4 +7,4 @@ aTox é uma aplicação de mensagens gratuita e de código aberto para o protoco
 * Distribuído: sem servidores centrais que possam ser desligados ou compelidos a entregar dados.
 * Leve: sem telemetria, anúncios ou outras formas de monitorização.
 
-More info: <a href="https://github.com/evilcorpltd/aTox">aTox</a>, <a href="https://tox.chat/">Tox</a>.
+More info: <a href="https://github.com/evilcorpltd/aTox/">aTox</a>, <a href="https://tox.chat/">Tox</a>.
