@@ -64,7 +64,7 @@
     <string name="connecting">درحال اتصال…</string>
     <string name="confirm">تایید</string>
     <string name="add_contact_message_error_empty">چیزی بنویسید تا اول فرستاده شود</string>
-    <string name="add_contact_message_default">در aTox همچون یک انسان متمدن با من سخن بگو</string>
+    <string name="add_contact_message_default">در aTox همچون یک انسان متمدن با من سخن بگو.</string>
     <string name="add_contact">اضافه کردن مخاطب</string>
     <string name="add">اضافه کردن</string>
     <string name="accept">پذیرفتن</string>
