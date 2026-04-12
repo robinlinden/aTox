@@ -107,7 +107,7 @@
     <string name="calls">Обаждания</string>
     <string name="ongoing_call">Текущ разговор</string>
     <string name="in_call_with">В разговор с/ъс %1$s</string>
-    <string name="pref_nospam_description">Промяната на полето БезСпам променя също и вашия идентификатор на Tox, което означава, че заявките за контакти трябва да бъдат изпращани до новия номер</string>
+    <string name="pref_nospam_description">Промяната на полето АнтиСпам променя също и вашия идентификатор на Tox, което означава, че заявките за контакти трябва да бъдат изпращани до новия номер</string>
     <string name="pref_disabled_tox_error">Изключено поради грешка при стартиране на Tox</string>
     <string name="saved">Запазено</string>
     <string name="delete_message">Премахване на съобщение</string>
