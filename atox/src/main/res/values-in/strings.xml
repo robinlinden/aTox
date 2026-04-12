@@ -143,4 +143,21 @@
     <string name="pref_ft_auto_accept_none">Kosong</string>
     <string name="pref_proxy_type_none">Kosong</string>
     <string name="pref_bootstrap_node_builtin">Bawaan</string>
+    <string name="add_contact_message_default">Bicaralah denganku di aTox seperti manusia yang rasional.</string>
+    <string name="pref_bootstrap_node_user_provided">Disediakan oleh pengguna</string>
+    <string name="or_import_existing_save">atau impor simpanan Tox yang sudah ada</string>
+    <string name="pref_confirm_calling">Konfirmasi panggilan</string>
+    <string name="notification_file_transfer">Transfer file masuk \"%1$s\"</string>
+    <string name="tox_save_export_failure">Tidak dapat mengekspor simpanan Tox: %1$s</string>
+    <string name="pref_auto_away">Otomatis tidak aktif</string>
+    <string name="warn_node_json_import_failed">Kesalahan saat mengimpor node</string>
+    <string name="error_no_nodes_loaded">Tidak dapat memuat node bootstrap, harap beralih ke node bawaan atau impor ulang node</string>
+    <string name="error_simultaneous_calls">Berpartisipasi dalam beberapa panggilan secara bersamaan tidak didukung</string>
+    <string name="pref_nospam">NoSpam</string>
+    <string name="pref_nospam_description">Mengubah NoSpam Anda akan mengubah ID Tox Anda, artinya permintaan pertemanan harus dikirim ke ID yang diperbarui</string>
+    <string name="pref_disabled_tox_error">Dinonaktifkan karena kesalahan saat memulai Tox</string>
+    <string name="speakerphone_toggle">Alihkan ke speakerphone</string>
+    <string name="export_history">Ekspor riwayat</string>
+    <string name="export_history_success">Riwayat pesan berhasil diekspor</string>
+    <string name="export_history_failure">Gagal mengekspor riwayat pesan: %1$s</string>
 </resources>
