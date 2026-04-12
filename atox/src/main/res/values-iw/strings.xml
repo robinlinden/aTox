@@ -42,7 +42,7 @@
     <string name="messages_incoming">הודעות נכנסות</string>
     <string name="name_default">משתמש aTox</string>
     <string name="profile_photo_description">תמונת פרופיל</string>
-    <string name="accept">קבל</string>
+    <string name="accept">אשר</string>
     <string name="pref_theme_follow_system">כמו המערכת</string>
     <string name="navigation_drawer_close">סגור תפריט</string>
     <string name="reject">דחה</string>
