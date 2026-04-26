@@ -1,5 +1,22 @@
 # aTox
 
+## This repository and aTox are unmaintained
+
+Thank you to everyone who contributed to aTox and helped make it as good as it
+was. It was a fun project, and I learned a lot.
+
+If you're looking to move to a different Tox client, there is
+[Toxic](https://github.com/TokTok/toxic/) and
+[qTox](https://github.com/TokTok/qTox/).
+
+Special thanks to all the translators, as well as an anonymous contributor who
+did lots and lots of testing before every release and helped manage the
+translation side of things.
+
+Best, [Robin](https://github.com/robinlinden/)
+
+---
+
 [![IRC](https://img.shields.io/badge/libera-%23atox-brightgreen.svg)][libera]
 [![License](https://img.shields.io/github/license/evilcorpltd/aTox)][license]
 [![Last release](https://img.shields.io/github/v/release/evilcorpltd/aTox)][releases]
